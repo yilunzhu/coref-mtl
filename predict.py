@@ -67,12 +67,14 @@ if __name__ == '__main__':
         docs = [json.loads(line) for line in lines]
         sg_docs = [json.loads(line) for line in sg_lines]
         tensor_examples, stored_info = data_processor.get_tensor_examples_from_custom_input(docs, sg_docs)
-        predicted_clusters, _, _ = runner.predict(model, tensor_examples)
+        predicted_clusters, _, _, predicted_entities, predicted_infstats = runner.predict(model, tensor_examples)
 
         if args.output_path:
             with open(args.output_path, 'w') as f:
                 for i, doc in enumerate(docs):
                     doc['predicted_clusters'] = predicted_clusters[i]
+                    doc['predicted_entities'] = predicted_entities[i] if args.config["mtl_entity"] else []
+                    doc['predicted_infstats'] = predicted_infstats[i] if args.config['mtl_infstat'] else []
                     f.write(json.dumps(doc))
                     f.write('\n')
             print(f'Saved prediction in {args.output_path}')

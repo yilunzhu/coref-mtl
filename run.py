@@ -226,13 +226,14 @@ class Runner:
         logger.info('Predicting %d samples...' % len(tensor_examples))
         model.to(self.device)
         predicted_spans, predicted_antecedents, predicted_clusters = [], [], []
+        predicted_entities, predicted_infstats = [], []
 
         model.eval()
         for i, (doc_key, tensor_example) in enumerate(tensor_examples):
             tensor_example = tensor_example[:9]
             example_gpu = [d.to(self.device) for d in tensor_example]
             with torch.no_grad():
-                _, _, _, span_starts, span_ends, antecedent_idx, antecedent_scores = model(*example_gpu)
+                _, _, _, span_starts, span_ends, antecedent_idx, antecedent_scores, entities, infstats = model(*example_gpu)
             span_starts, span_ends = span_starts.tolist(), span_ends.tolist()
             antecedent_idx, antecedent_scores = antecedent_idx.tolist(), antecedent_scores.tolist()
             clusters, mention_to_cluster_id, antecedents = model.get_predicted_clusters(span_starts, span_ends, antecedent_idx, antecedent_scores)
@@ -242,7 +243,14 @@ class Runner:
             predicted_antecedents.append(antecedents)
             predicted_clusters.append(clusters)
 
-        return predicted_clusters, predicted_spans, predicted_antecedents
+            if self.config["mtl_entity"]:
+                entities = entities.tolist()
+                predicted_entities.append(entities)
+            if self.config['mtl_infstat']:
+                infstats = infstats.tolist()
+                predicted_infstats.append(infstats)
+
+        return predicted_clusters, predicted_spans, predicted_antecedents, predicted_entities, predicted_infstats
 
     def get_optimizer(self, model):
         no_decay = ['bias', 'LayerNorm.weight']
