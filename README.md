@@ -33,4 +33,15 @@ To run SpanBERT-large, you need at least 24GB GPU for training.
 
 ## Citation
 ```
+@InProceedings{zhu-EtAl:2023:ijcnlp,
+  author    = {Zhu, Yilun  and  Peng, Siyao  and  Pradhan, Sameer  and  Zeldes, Amir},
+  title     = {Incorporating Singletons and Mention-based Features in Coreference Resolution via Multi-task Learning for Better Generalization},
+  booktitle      = {Proceedings of the 13th International Joint Conference on Natural Language Processing and the 3rd Conference of the Asia-Pacific Chapter of the Association for Computational Linguistics},
+  month          = {November},
+  year           = {2023},
+  address        = {Nusa Dua, Bali},
+  publisher      = {Association for Computational Linguistics},
+  pages     = {121--130},
+  url       = {https://aclanthology.org/2023.ijcnlp-short.14}
+}
 ```
